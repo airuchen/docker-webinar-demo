@@ -1,19 +1,5 @@
 version: 2.1
 
-workflows:
-  build_test:
-    jobs:
-      - node/test:
-          matrix:
-            parameters:
-              version:
-                - 14.0.0
-                - 13.11.0
-                - 12.16.0
-      - build_docker_image:
-          requires:
-            - node/test
-
 jobs:
   build_docker_image:
     docker:
@@ -30,6 +16,25 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t your-image:$TAG .
-
-orbs:
-  node: circleci/node@4.0.0
+  one:
+    docker:
+      - image: circleci/ruby:2.4.1
+      steps:
+       - checkout # this pulls pulls code down from GitHub
+       - run: echo "A first hello" # This prints "A first hello" to stdout.
+       - run: sleep 25 # a command telling the job to "sleep" for 25 seconds.
+  two: # This is our second job.
+     docker: # it runs inside a docker image, the same as above.
+       - image: circleci/ruby:2.4.1
+     steps:
+       - checkout
+       - run: echo "A more familiar hi" # We run a similar echo command to above.
+       - run: sleep 15 # and then sleep for 15 seconds.
+  
+ 
+ workflows:
+   version: 2.1
+   one_and_two: # this is the name of our workflow
+     jobs: # and here we list the jobs we are going to run.
+       - one
+       - two
