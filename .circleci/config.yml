@@ -31,7 +31,6 @@ jobs:
        - run: echo "A more familiar hi" # We run a similar echo command to above.
        - run: sleep 15 # and then sleep for 15 seconds.
   
- 
  workflows:
    version: 2.1
    one_and_two: # this is the name of our workflow
